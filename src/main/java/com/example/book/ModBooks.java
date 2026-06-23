@@ -1,6 +1,7 @@
 package com.example.book;
 
 import com.example.item.ModItems;
+import com.example.loot.ModLootTables;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -16,9 +17,9 @@ import java.util.List;
 import java.util.Set;
 
 public final class ModBooks {
-	private static final float BOOK_CHEST_CHANCE = 0.09F;
-	private static final float RARE_BIOME_BOOK_CHANCE = 0.09F;
-	private static final float STRONGHOLD_BOOK_CHANCE = 0.09F;
+	private static final float BOOK_CHEST_CHANCE = 0.90F;
+	private static final float RARE_BIOME_BOOK_CHANCE = 0.90F;
+	private static final float STRONGHOLD_BOOK_CHANCE = 0.90F;
 	private static final ResourceKey<LootTable> SIMPLE_DUNGEON_CHEST = chest("simple_dungeon");
 
 	private static final Set<ResourceKey<LootTable>> VILLAGE_CHESTS = Set.of(
@@ -526,31 +527,56 @@ public final class ModBooks {
 
 	public static void initialize() {
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-			if (!source.isBuiltin()) {
+			// Only inject into chest-type tables, but into EVERY one of them (any namespace/mod),
+			// minus the shared blacklist.
+			if (!source.isBuiltin() || !ModLootTables.isInjectableChest(key, tableBuilder)) {
 				return;
 			}
 
-			List<BookDefinition> matchingBooks = matchingBooks(key);
+			List<BookDefinition> books = matchingBooks(key);
+			float chance;
+			if (!books.isEmpty()) {
+				// Themed / known chest: keep its specific book pool and chance.
+				chance = bookChanceFor(key);
+			} else {
+				// Global fallback: any other chest (incl. modded ones we don't list, e.g. Stellarity)
+				// gets the general overworld book set, so no chest is ever missed. Themed books stay
+				// exclusive to their themed chests because they are excluded from this set.
+				books = generalOverworldBooks();
+				chance = BOOK_CHEST_CHANCE;
+			}
 
-			if (!matchingBooks.isEmpty()) {
-				tableBuilder.pool(createBookPool(matchingBooks, bookChanceFor(key)).build());
+			if (!books.isEmpty()) {
+				tableBuilder.pool(createBookPool(books, chance).build());
 			}
 		});
+	}
+
+	/** The general "overworld" books used as the global fallback for any unlisted chest. */
+	private static List<BookDefinition> generalOverworldBooks() {
+		List<BookDefinition> books = new ArrayList<>();
+		for (BookDefinition book : BOOKS) {
+			if (isOverworldGeneral(book)) {
+				books.add(book);
+			}
+		}
+		return books;
 	}
 
 	/** The books that this mod can inject into the given loot table (empty if none). */
 	public static List<BookDefinition> matchingBooks(ResourceKey<LootTable> key) {
 		boolean generalChest = SIMPLE_DUNGEON_CHEST.equals(key) || GENERAL_BOOK_CHESTS.contains(key);
-		boolean betterDungeonChest = BETTER_DUNGEON_CHESTS.contains(key);
+		boolean strongholdChest = STRONGHOLD_CHESTS.contains(key);
 		boolean overworldGeneralChest = OVERWORLD_GENERAL_CHESTS.contains(key);
 
 		List<BookDefinition> matchingBooks = new ArrayList<>();
 		for (BookDefinition book : BOOKS) {
-			boolean general = generalChest && canSpawnInSimpleDungeon(book)
-					// "Молитва Серед Пісків" — пустельна книжка, не має випадати у betterdungeons.
-					&& !(betterDungeonChest && book.id().equals("prayer_in_the_sand"));
+			// Звичайні данжі отримують лише загальні книжки — жодної стихійної (тематичної).
+			boolean general = generalChest && canSpawnInSimpleDungeon(book);
+			// Stronghold — запасний варіант: усі книжки, окрім незерської "Кістки в Пеклі".
+			boolean stronghold = strongholdChest && !book.id().equals("bones_in_hell");
 			if (book.lootTables().contains(key)
-					|| STRONGHOLD_CHESTS.contains(key)
+					|| stronghold
 					|| general
 					|| overworldGeneralChest && isOverworldGeneral(book)) {
 				matchingBooks.add(book);
@@ -618,11 +644,14 @@ public final class ModBooks {
 		return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(namespace, path));
 	}
 
+	// General dungeons (simple dungeon, YUNG's dungeons, witch huts) get only the non-themed books.
+	// Every elemental/themed book (nether, ocean, jungle, desert) is excluded here.
 	private static boolean canSpawnInSimpleDungeon(BookDefinition book) {
 		return !book.id().equals("bones_in_hell")
 				&& !book.id().equals("sea_of_turtles")
 				&& !book.id().equals("ocean_echoes")
-				&& !book.id().equals("jungle_temple_journal");
+				&& !book.id().equals("jungle_temple_journal")
+				&& !book.id().equals("prayer_in_the_sand");
 	}
 
 	// General "overworld" books only: excludes the nether, ocean, desert and jungle themed books.

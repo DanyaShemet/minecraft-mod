@@ -10,6 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
@@ -18,8 +19,8 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import java.util.Set;
 
 public final class ModLootTables {
-	private static final float MUSIC_DISC_CHEST_CHANCE = 0.07F;
-	private static final float STRONGHOLD_DISC_CHANCE = 0.07F;
+	private static final float MUSIC_DISC_CHEST_CHANCE = 0.90F;
+	private static final float STRONGHOLD_DISC_CHANCE = 0.90F;
 	private static final float R_UKRAINE_DISC_CHANCE = 1.0F;
 	private static final int R_UKRAINE_DISC_WEIGHT = 1;
 	private static final float ECHO_VILLAGER_DISC_CHANCE = 1.0F;
@@ -221,11 +222,13 @@ public final class ModLootTables {
 
 	public static void initialize() {
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-			if (!source.isBuiltin() || !(MUSIC_DISC_CHESTS.contains(key) || YUNG_CHESTS.contains(key) || TREASURE_CHESTS.contains(key) || GAP_CHESTS.contains(key))) {
+			// Global: inject the music-disc pool into every chest loot table, regardless of
+			// namespace or mod, so no container is ever missed (minus the blacklist).
+			if (!source.isBuiltin() || !isInjectableChest(key, tableBuilder)) {
 				return;
 			}
 
-			tableBuilder.pool(createDiscPool(discChanceFor(key)).build());
+			tableBuilder.pool(createDiscPool(MUSIC_DISC_CHEST_CHANCE).build());
 		});
 
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
@@ -239,6 +242,42 @@ public final class ModLootTables {
 
 	private static float discChanceFor(ResourceKey<LootTable> key) {
 		return STRONGHOLD_CHESTS.contains(key) ? STRONGHOLD_DISC_CHANCE : MUSIC_DISC_CHEST_CHANCE;
+	}
+
+	// Path fragments that mark a loot table as "not a real treasure chest" even if it somehow
+	// uses the CHEST param set. A second line of defence on top of the param-set check.
+	private static final Set<String> PATH_BLACKLIST = Set.of(
+			"entity",
+			"entities",
+			"fishing",
+			"archaeology",
+			"blocks",
+			"gameplay"
+	);
+
+	/**
+	 * True if the loot table being modified is a chest-type table (uses the CHEST context param set).
+	 * Works for any namespace/mod, because it inspects the table itself rather than a hard-coded list.
+	 * Building the builder here is a cheap, one-time cost during datapack load.
+	 */
+	public static boolean isChestTable(LootTable.Builder builder) {
+		return builder.build().getParamSet() == LootContextParamSets.CHEST;
+	}
+
+	/** True if the loot table's path contains a blacklisted fragment (mob/block/fishing/etc.). */
+	public static boolean isBlacklisted(ResourceKey<LootTable> key) {
+		String path = key.location().getPath();
+		for (String fragment : PATH_BLACKLIST) {
+			if (path.contains(fragment)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** The single gate both disc and book injection use: a chest table that isn't blacklisted. */
+	public static boolean isInjectableChest(ResourceKey<LootTable> key, LootTable.Builder builder) {
+		return isChestTable(builder) && !isBlacklisted(key);
 	}
 
 	/** True if this mod injects a music-disc pool into the given loot table. */
