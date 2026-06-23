@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "custom-discs:item/chronicle_of_departure_book"
+	}
+}

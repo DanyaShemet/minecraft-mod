@@ -1,0 +1,191 @@
+{
+	"parent": "custom-discs:find_first_book",
+	"display": {
+		"icon": {
+			"id": "custom-discs:chronicle_of_departure_book"
+		},
+		"title": {
+			"translate": "advancements.custom-discs.find_all_books.title"
+		},
+		"description": {
+			"translate": "advancements.custom-discs.find_all_books.description"
+		},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"has_chronicle_of_departure": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:chronicle_of_departure_book"
+					}
+				]
+			}
+		},
+		"has_jungle_temple_journal": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:jungle_temple_journal_book"
+					}
+				]
+			}
+		},
+		"has_bones_in_hell": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:bones_in_hell_book"
+					}
+				]
+			}
+		},
+		"has_prayer_in_the_sand": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:prayer_in_the_sand_book"
+					}
+				]
+			}
+		},
+		"has_sea_of_turtles": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:sea_of_turtles_book"
+					}
+				]
+			}
+		},
+		"has_book_of_the_four": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:book_of_the_four_book"
+					}
+				]
+			}
+		},
+		"has_the_hidden_truth": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:the_hidden_truth_book"
+					}
+				]
+			}
+		},
+		"has_wheat_for_everyone": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:wheat_for_everyone_book"
+					}
+				]
+			}
+		},
+		"has_declaration_of_freedom": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:declaration_of_freedom_book"
+					}
+				]
+			}
+		},
+		"has_new_zombichi_chronicle": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:new_zombichi_chronicle_book"
+					}
+				]
+			}
+		},
+		"has_ocean_echoes": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:ocean_echoes_book"
+					}
+				]
+			}
+		},
+		"has_skeptic_of_the_garden": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:skeptic_of_the_garden_book"
+					}
+				]
+			}
+		},
+		"has_weakland_campaign": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:weakland_campaign_book"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_chronicle_of_departure"
+		],
+		[
+			"has_jungle_temple_journal"
+		],
+		[
+			"has_bones_in_hell"
+		],
+		[
+			"has_prayer_in_the_sand"
+		],
+		[
+			"has_sea_of_turtles"
+		],
+		[
+			"has_book_of_the_four"
+		],
+		[
+			"has_the_hidden_truth"
+		],
+		[
+			"has_wheat_for_everyone"
+		],
+		[
+			"has_declaration_of_freedom"
+		],
+		[
+			"has_new_zombichi_chronicle"
+		],
+		[
+			"has_ocean_echoes"
+		],
+		[
+			"has_skeptic_of_the_garden"
+		],
+		[
+			"has_weakland_campaign"
+		]
+	]
+}

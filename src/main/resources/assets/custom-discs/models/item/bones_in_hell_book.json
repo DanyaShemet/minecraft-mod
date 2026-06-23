@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "custom-discs:item/bones_in_hell_book"
+	}
+}

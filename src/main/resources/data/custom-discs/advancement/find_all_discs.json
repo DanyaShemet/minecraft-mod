@@ -1,0 +1,165 @@
+{
+	"parent": "custom-discs:find_first_disc",
+	"display": {
+		"icon": {
+			"id": "custom-discs:god2_disc"
+		},
+		"title": {
+			"translate": "advancements.custom-discs.find_all_discs.title"
+		},
+		"description": {
+			"translate": "advancements.custom-discs.find_all_discs.description"
+		},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"has_r_ukraine_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:r_ukraine_disc"
+					}
+				]
+			}
+		},
+		"has_echo_villager_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:echo_villager_disc"
+					}
+				]
+			}
+		},
+		"has_shaman_p_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:shaman_p_disc"
+					}
+				]
+			}
+		},
+		"has_para_22_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:para-22_disc"
+					}
+				]
+			}
+		},
+		"has_forest_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:forest_disc"
+					}
+				]
+			}
+		},
+		"has_god_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:god_disc"
+					}
+				]
+			}
+		},
+		"has_podcast_1_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:podcast-1_disc"
+					}
+				]
+			}
+		},
+		"has_podcast_2_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:podcast-2_disc"
+					}
+				]
+			}
+		},
+		"has_podcast_3_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:podcast-3_disc"
+					}
+				]
+			}
+		},
+		"has_opera_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:opera_disc"
+					}
+				]
+			}
+		},
+		"has_god2_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:god2_disc"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_r_ukraine_disc"
+		],
+		[
+			"has_echo_villager_disc"
+		],
+		[
+			"has_shaman_p_disc"
+		],
+		[
+			"has_para_22_disc"
+		],
+		[
+			"has_forest_disc"
+		],
+		[
+			"has_god_disc"
+		],
+		[
+			"has_podcast_1_disc"
+		],
+		[
+			"has_podcast_2_disc"
+		],
+		[
+			"has_podcast_3_disc"
+		],
+		[
+			"has_opera_disc"
+		],
+		[
+			"has_god2_disc"
+		]
+	]
+}

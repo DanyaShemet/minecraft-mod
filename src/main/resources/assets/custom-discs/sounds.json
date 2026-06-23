@@ -1,0 +1,90 @@
+{
+	"music_disc.r_ukraine": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/r_ukraine",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.echo_villager": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/echo_villager",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.shaman_p": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/shaman_p",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.para-22": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/para-22",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.forest": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/forest",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.god": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/god-rock",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.podcast-1": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/podcast-1",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.podcast-2": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/podcast-2",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.podcast-3": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/podcast-3",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.opera": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/opera",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.god2": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/god2",
+				"stream": true
+			}
+		]
+	}
+}

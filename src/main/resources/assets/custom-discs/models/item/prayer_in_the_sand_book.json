@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "custom-discs:item/prayer_in_the_sand_book"
+	}
+}

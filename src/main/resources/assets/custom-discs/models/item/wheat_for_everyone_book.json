@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "custom-discs:item/wheat_for_everyone_book"
+	}
+}

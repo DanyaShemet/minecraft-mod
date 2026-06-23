@@ -1,0 +1,12 @@
+{
+	"comparator_output": 11,
+	"description": {
+		"translate": "item.custom-discs.opera_disc.jukebox"
+	},
+	"length_in_seconds": 58.0,
+	"sound_event": "custom-discs:music_disc.opera"
+}
+
+
+
+
