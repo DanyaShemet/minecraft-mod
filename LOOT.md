@@ -44,40 +44,51 @@ isInjectableChest(key, tableBuilder)
 
 ## Discs (`ModLootTables`)
 
-- 11 discs in `MUSIC_DISC_LOOT`, all weight 1 → uniform random pick.
+- 12 discs in `MUSIC_DISC_LOOT`, all weight 1 → uniform random pick.
 - Injected into **every** injectable chest. One pool, 1 roll, gated by a random
   chance. Discs are **not** unique — they can repeat.
-- Chance constant: `MUSIC_DISC_CHEST_CHANCE` (also `STRONGHOLD_DISC_CHANCE`,
-  same value). **Currently 0.90 (TEST). Production value was 0.07.**
+- Chance constant: `MUSIC_DISC_CHEST_CHANCE` = **0.07** (7%), everywhere.
 - Creeper/skeleton-kill disc drop is a separate, keyed listener (entity table,
   unaffected by the global chest logic).
-- The old disc chest sets (`MUSIC_DISC_CHESTS`, `YUNG_CHESTS`, `TREASURE_CHESTS`,
-  `GAP_CHESTS`, `STRONGHOLD_CHESTS`) **no longer drive disc injection** (it's
-  global). They remain only for the (disabled) test command's accessors.
+- The old per-structure disc chest sets were **deleted** — injection is global,
+  so they were dead code. (Discs no longer have any hand-maintained list.)
 
 ## Books (`ModBooks`)
 
-13 books total (`BOOKS`). Each book is **unique per world**: it can drop **once
-ever**, tracked in `GeneratedBookState` (per-level SavedData). The
-`UniqueBookLootFunction` picks a random *not-yet-generated* matching book and
-marks it; if all matching books are already generated it returns `EMPTY`.
+15 books total (`BOOKS`) — 5 themed + 10 general. Each book is **unique per
+world**: it can drop **once ever**, tracked in `GeneratedBookState` (per-level
+SavedData). The `UniqueBookLootFunction` picks a random *not-yet-generated*
+matching book and marks it; if all matching books are already generated it
+returns `EMPTY`.
 
-Chances: `BOOK_CHEST_CHANCE`, `RARE_BIOME_BOOK_CHANCE`, `STRONGHOLD_BOOK_CHANCE`.
-**Currently all 0.90 (TEST). Production value was 0.09.**
+Chances (`bookChanceFor(key)`):
+- `THEMED_BOOK_CHANCE` = **0.10** (10%) — elemental books in their own themed
+  places (desert / jungle / ocean), detected by `isThemedChest(key)`.
+- `BOOK_CHEST_CHANCE` = **0.05** (5%) — the default: stronghold, villages,
+  dungeons, the global fallback, **and the nether** (the nether book is
+  explicitly excluded from `isThemedChest`, so it uses the default).
+
+`isThemedChest(key)` = the key is in an elemental book's own `lootTables`, except
+`bones_in_hell` (nether stays default). Stronghold is never a themed chest, so it
+falls through to the default. (The old `STRONGHOLD_BOOK_CHANCE` and
+`RARE_BIOME_BOOK_CHANCE`/`RARE_BIOME_CHESTS` were removed — both equalled the
+default, so they were no-ops.)
 
 ### Which books drop where — `matchingBooks(key)`
 
 A book matches a chest if any of:
 1. `book.lootTables().contains(key)` — its own themed chest list.
 2. `strongholdChest && !bones_in_hell` — **stronghold is the backup**: all books
-   except the nether one.
+   except the nether one. `isStrongholdChest` matches by path
+   (`path.contains("stronghold")`), so it works for vanilla **and** Stellarity
+   (`stellarity:stronghold/*`) and any other mod that overhauls strongholds.
 3. `generalChest && canSpawnInSimpleDungeon(book)` — general dungeons get only
    non-themed books.
 4. `overworldGeneralChest && isOverworldGeneral(book)` — gap/overworld-general
    chests get only non-themed books.
 
 If `matchingBooks(key)` is **empty** (an unlisted/modded chest), the MODIFY
-listener falls back to `generalOverworldBooks()` (the 8 non-themed books) at
+listener falls back to `generalOverworldBooks()` (the 10 non-themed books) at
 `BOOK_CHEST_CHANCE`. So **every** chest has books; themed books never leak via
 the fallback.
 
@@ -88,23 +99,28 @@ books, so themed books **never** drop in dungeons or generic modded chests:
 `bones_in_hell`, `sea_of_turtles`, `ocean_echoes`, `jungle_temple_journal`,
 `prayer_in_the_sand`.
 
+Backups = stronghold **and** ancient city. Both host all books except the nether
+one (`backupChest && !bones_in_hell` in `matchingBooks`).
+
 | Book | id | Where it can drop |
 |---|---|---|
-| Кістки в Пеклі (nether) | `bones_in_hell` | nether chests only (NOT stronghold) |
-| Молитва Серед Пісків (desert) | `prayer_in_the_sand` | desert chests + stronghold |
-| Записки з Південних Джунглів (jungle) | `jungle_temple_journal` | jungle chests + `ancient_city` + stronghold |
-| Море Черепах (ocean) | `sea_of_turtles` | ocean chests + `ancient_city` + stronghold |
-| Знахідка на Дні (ocean) | `ocean_echoes` | ocean chests + `ancient_city` + stronghold |
+| Кістки в Пеклі (nether) | `bones_in_hell` | nether chests only (NOT backups) |
+| Молитва Серед Пісків (desert) | `prayer_in_the_sand` | desert chests + backups |
+| Записки з Південних Джунглів (jungle) | `jungle_temple_journal` | jungle chests + backups |
+| Море Черепах (ocean) | `sea_of_turtles` | ocean chests + backups |
+| Знахідка на Дні (ocean) | `ocean_echoes` | ocean chests + backups |
 
-The 8 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
-illager_mansion/*), strongholds, general dungeons, and as the global fallback.
+The 10 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
+illager_mansion/*), the backups (stronghold + ancient city), general dungeons,
+and as the global fallback.
 
 ### Notable manual sets in `ModBooks`
 
 - `VILLAGE_CHESTS` — includes `woodland_mansion`, `illager_mansion/generic`,
   `illager_mansion/secret_room` (mansions share the village book pool).
-- `STRONGHOLD_CHESTS` — vanilla stronghold corridor/crossing/library.
-- ocean books' `lootTables` include `chests/ancient_city`; jungle book too.
+- Strongholds are detected by path (`isStrongholdChest`), not a set.
+- Ancient city is a backup (`isAncientCityChest`, path match) — all books except
+  nether, at a rarer chance. Not a themed chest.
 - Witch villa / mangrove are NOT ocean chests anymore (they get general books via
   `OVERWORLD_GENERAL_CHESTS`).
 
@@ -118,28 +134,32 @@ Stellarity overhauls End + strongholds:
   `stellarity:end_city/*`.
 
 Because injection is **global**, Stellarity's own chest tables still receive discs
-+ books automatically. Caveat: Stellarity strongholds are "unlisted" chests, so
-they get the **general fallback books**, not the full stronghold set. To give them
-the full set, add `stellarity:stronghold/*` keys to `STRONGHOLD_CHESTS`.
++ books automatically. Stellarity strongholds (`stellarity:stronghold/*`) are
+recognised by `isStrongholdChest` (path match), so they correctly get the full
+stronghold book set (all books except the nether one), same as vanilla.
 
 ## Test command (currently DISABLED)
 
-`com.example.command.DiscStatsCommand` — `/discstats chest <id> [n]` and
-`/discstats all [n]`. Rolls real loot tables to measure drop rates; snapshots and
-restores `GeneratedBookState` so it never consumes books from the world.
+`com.example.command.DiscStatsCommand` — `/discstats chest <id> [n]` only
+(default 10000 rolls). Rolls the real loot table to measure disc/book drop rates;
+snapshots and restores `GeneratedBookState` so it never consumes books from the
+world. The old `all` mode was removed (with global injection, "all" = every chest
+in the game, so there is no list to iterate).
 
 Registration is commented out in `CustomDiscs.onInitialize()`. Re-enable the two
-commented lines to use it. Note its disc accessors are now stale (discs are
-global, not list-based).
+commented lines to use it.
 
-## ⚠️ Before release
+## Chances (current / production)
 
-Restore production chances:
-- `ModLootTables`: `MUSIC_DISC_CHEST_CHANCE`, `STRONGHOLD_DISC_CHANCE` → `0.07`.
-- `ModBooks`: `BOOK_CHEST_CHANCE`, `RARE_BIOME_BOOK_CHANCE`,
-  `STRONGHOLD_BOOK_CHANCE` → `0.09`.
+- Discs: `MUSIC_DISC_CHEST_CHANCE` = **0.07** (every chest).
+- Themed books in themed places: `THEMED_BOOK_CHANCE` = **0.10**.
+- All other books (stronghold / villages / dungeons / fallback / nether):
+  `BOOK_CHEST_CHANCE` = **0.05**.
+- Ancient city: `ANCIENT_CITY_BOOK_CHANCE` = **0.04** (a second backup like
+  stronghold — all books except nether — but rarer).
 
-(They are all temporarily `0.90` for in-game testing.)
+To re-enable easy in-game testing, bump these constants up (e.g. 0.90) and
+rebuild.
 
 ## Key files
 

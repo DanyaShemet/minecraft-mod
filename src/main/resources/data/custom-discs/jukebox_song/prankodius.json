@@ -1,0 +1,8 @@
+{
+	"comparator_output": 13,
+	"description": {
+		"translate": "item.custom-discs.prankodius_disc.jukebox"
+	},
+	"length_in_seconds": 154.0,
+	"sound_event": "custom-discs:music_disc.prankodius"
+}

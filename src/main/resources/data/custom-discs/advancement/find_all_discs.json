@@ -125,6 +125,16 @@
 					}
 				]
 			}
+		},
+		"has_prankodius_disc": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:prankodius_disc"
+					}
+				]
+			}
 		}
 	},
 	"requirements": [
@@ -160,6 +170,9 @@
 		],
 		[
 			"has_god2_disc"
+		],
+		[
+			"has_prankodius_disc"
 		]
 	]
 }

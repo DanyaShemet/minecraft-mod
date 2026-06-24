@@ -11,7 +11,13 @@
       "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat compileJava --console=plain 2>&1 | Select-Object -Last 20)",
       "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat compileJava --console=plain 2>&1 | Select-Object -Last 12)",
       "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat build --console=plain 2>&1 | Select-Object -Last 15)",
-      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat build --console=plain 2>&1 | Select-Object -Last 8)"
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat build --console=plain 2>&1 | Select-Object -Last 8)",
+      "Bash(./gradlew compileJava -q)",
+      "Bash(python \"C:/Users/User/AppData/Local/Temp/claude/D-------------------fabric-mods-music/b445cd40-e620-4945-bede-f6936edcd7d1/scratchpad/oggdur.py\" src/main/resources/assets/custom-discs/sounds/records/prankodius.ogg)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat compileJava --console=plain 2>&1 | Select-Object -Last 25)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat compileJava --console=plain 2>&1 | Select-Object -Last 8)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat compileJava --console=plain 2>&1 | Select-Object -Last 10)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-25.0.3\"; .\\\\gradlew.bat build --console=plain 2>&1 | Select-Object -Last 6)"
     ]
   }
 }

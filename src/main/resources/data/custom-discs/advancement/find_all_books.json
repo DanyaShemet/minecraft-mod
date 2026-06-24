@@ -145,6 +145,26 @@
 					}
 				]
 			}
+		},
+		"has_history_of_disappearance": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:history_of_disappearance_book"
+					}
+				]
+			}
+		},
+		"has_aleh_journal": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "custom-discs:aleh_journal_book"
+					}
+				]
+			}
 		}
 	},
 	"requirements": [
@@ -186,6 +206,12 @@
 		],
 		[
 			"has_weakland_campaign"
+		],
+		[
+			"has_history_of_disappearance"
+		],
+		[
+			"has_aleh_journal"
 		]
 	]
 }

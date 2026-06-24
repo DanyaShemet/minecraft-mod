@@ -86,5 +86,13 @@
 				"stream": true
 			}
 		]
+	},
+	"music_disc.prankodius": {
+		"sounds": [
+			{
+				"name": "custom-discs:records/prankodius",
+				"stream": true
+			}
+		]
 	}
 }

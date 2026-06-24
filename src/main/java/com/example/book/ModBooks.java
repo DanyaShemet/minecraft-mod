@@ -17,9 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 public final class ModBooks {
-	private static final float BOOK_CHEST_CHANCE = 0.90F;
-	private static final float RARE_BIOME_BOOK_CHANCE = 0.90F;
-	private static final float STRONGHOLD_BOOK_CHANCE = 0.90F;
+	// Default book chance: stronghold, villages, dungeons and the global fallback.
+	private static final float BOOK_CHEST_CHANCE = 0.05F;
+	// Elemental/themed books in their own themed places (desert, jungle, ocean). Nether stays default.
+	private static final float THEMED_BOOK_CHANCE = 0.09F;
+	// Ancient city: a second backup like stronghold (all books except nether), but rarer.
+	private static final float ANCIENT_CITY_BOOK_CHANCE = 0.04F;
 	private static final ResourceKey<LootTable> SIMPLE_DUNGEON_CHEST = chest("simple_dungeon");
 
 	private static final Set<ResourceKey<LootTable>> VILLAGE_CHESTS = Set.of(
@@ -161,21 +164,8 @@ public final class ModBooks {
 			table("nova_structures", "chests/piglin_outstation/outstation_treasure")
 	);
 
-	private static final Set<ResourceKey<LootTable>> RARE_BIOME_CHESTS = mergeAll(
-			SHIPWRECK_CHESTS, OCEAN_RUIN_CHESTS, BETTER_OCEAN_MONUMENT_CHESTS,
-			Set.of(chest("desert_pyramid"), chest("jungle_temple")),
-			BETTER_DESERT_TEMPLE_CHESTS, BETTER_JUNGLE_TEMPLE_CHESTS,
-			EXTRA_DESERT_CHESTS, EXTRA_JUNGLE_CHESTS, EXTRA_OCEAN_CHESTS
-	);
-
 	// Chests that host the general (non-themed) book set, like vanilla simple dungeons
 	private static final Set<ResourceKey<LootTable>> GENERAL_BOOK_CHESTS = merge(BETTER_DUNGEON_CHESTS, BETTER_WITCH_HUT_CHESTS);
-
-	private static final Set<ResourceKey<LootTable>> STRONGHOLD_CHESTS = Set.of(
-			chest("stronghold_corridor"),
-			chest("stronghold_crossing"),
-			chest("stronghold_library")
-	);
 
 	// --- Gap structures (Dungeons & Taverns) that had no themed match: get only the general overworld books ---
 
@@ -234,7 +224,7 @@ public final class ModBooks {
 			"Томас Редвуд",
 			ModItems.JUNGLE_TEMPLE_JOURNAL_BOOK,
 			1.0F,
-			mergeAll(Set.of(chest("jungle_temple"), chest("ancient_city")), BETTER_JUNGLE_TEMPLE_CHESTS, EXTRA_JUNGLE_CHESTS),
+			mergeAll(Set.of(chest("jungle_temple")), BETTER_JUNGLE_TEMPLE_CHESTS, EXTRA_JUNGLE_CHESTS),
 			List.of(
 					"151 рік після Відходу.\n\nНарешті ми досягли Південних Джунглів.\n\nМісцеві провідники відмовилися йти далі.",
 					"Вони називають це місце Храмом Картографа.\n\nКажуть, тут Великий Шукач сховав знання про весь світ.",
@@ -302,7 +292,7 @@ public final class ModBooks {
 			"Капітан Ерік Сольвейг",
 			ModItems.SEA_OF_TURTLES_BOOK,
 			1.0F,
-			mergeAll(SHIPWRECK_CHESTS, OCEAN_RUIN_CHESTS, BETTER_OCEAN_MONUMENT_CHESTS, EXTRA_OCEAN_CHESTS, Set.of(chest("ancient_city"))),
+			mergeAll(SHIPWRECK_CHESTS, OCEAN_RUIN_CHESTS, BETTER_OCEAN_MONUMENT_CHESTS, EXTRA_OCEAN_CHESTS),
 			List.of(
 					"455 рік після Відходу.\n\nНа сьомий день плавання ми помітили дивну споруду серед моря.",
 					"Спершу я вирішив, що це звичайні руїни.\n\nТа коли ми наблизилися, побачили сотні черепах.",
@@ -325,7 +315,7 @@ public final class ModBooks {
 			"Верховний Жрець Августин",
 			ModItems.BOOK_OF_THE_FOUR_BOOK,
 			1.0F,
-			merge(VILLAGE_CHESTS, Set.of(chest("stronghold_library"))),
+			VILLAGE_CHESTS,
 			List.of(
 					"На початку існувала лише Порожнеча.\n\nІ тоді прийшли Четверо.",
 					"Потужніч узяв землю в долоні та надав їй форму.\n\nТак народилися рівнини, ліси та моря.",
@@ -386,7 +376,7 @@ public final class ModBooks {
 					"Якщо вам здається, що поле достатньо велике - зробіть його вдвічі більшим.",
 					"Більшість проблем держави можна вирішити хорошим урожаєм.\n\nРешту проблем - ще кращим урожаєм.",
 					"Якщо жодна з цих порад не допомогла, спробуйте прочитати книгу ще раз.\n\nМожливо, ви пропустили найважливіше.",
-					"З повагою,\n\nЧиновник"
+					"З повагою,\n\n Михайло Чиновник"
 			)
 	);
 
@@ -396,7 +386,7 @@ public final class ModBooks {
 			"Маршал Грегор Лісний",
 			ModItems.DECLARATION_OF_FREEDOM_BOOK,
 			1.0F,
-			merge(VILLAGE_CHESTS, Set.of(chest("stronghold_library"))),
+			VILLAGE_CHESTS,
 			List.of(
 					"Другий рік після Відходу.\n\nЯ пишу цей документ від імені Тимчасової Ради Потужляндії.",
 					"Майже два роки ми чекали на повернення Чотирьох.\n\nМайже два роки ми робили вигляд, що нічого не змінилося.",
@@ -442,7 +432,7 @@ public final class ModBooks {
 			"Водолаз Артур Сивий",
 			ModItems.OCEAN_ECHOES_BOOK,
 			1.0F,
-			mergeAll(SHIPWRECK_CHESTS, OCEAN_RUIN_CHESTS, BETTER_OCEAN_MONUMENT_CHESTS, EXTRA_OCEAN_CHESTS, Set.of(chest("ancient_city"))),
+			mergeAll(SHIPWRECK_CHESTS, OCEAN_RUIN_CHESTS, BETTER_OCEAN_MONUMENT_CHESTS, EXTRA_OCEAN_CHESTS),
 			List.of(
 					"487 рік після Відходу.\n\nНа глибині сорока двох блоків ми виявили човен.",
 					"Судно лежало на боці серед мулу.\n\nОзнак вантажу майже не залишилося.",
@@ -465,7 +455,7 @@ public final class ModBooks {
 			"Дмитро Безвірний",
 			ModItems.SKEPTIC_OF_THE_GARDEN_BOOK,
 			1.0F,
-			merge(VILLAGE_CHESTS, Set.of(chest("stronghold_library"))),
+			VILLAGE_CHESTS,
 			List.of(
 					"Скільки ще ми будемо повторювати одні й ті самі казки?",
 					"Щороку жерці розповідають нам, що Sleepwalking створила всі великі сади, храми та святилища світу.",
@@ -506,6 +496,55 @@ public final class ModBooks {
 			)
 	);
 
+	private static final BookDefinition HISTORY_OF_DISAPPEARANCE = new BookDefinition(
+			"history_of_disappearance",
+			"Зникнення та Народження Нового Світу",
+			"Професор Іван Кирка Молодший",
+			ModItems.HISTORY_OF_DISAPPEARANCE_BOOK,
+			1.0F,
+			VILLAGE_CHESTS,
+			List.of(
+					"Зникнення Чотирьох вважається найважливішою подією відомої історії.\n\nУсі сучасні держави так чи інакше походять від наслідків цієї події.",
+					"До Зникнення більшість поселень були пов'язані спільними дорогами, торговими маршрутами та політичними угодами.",
+					"Перші роки після Відходу характеризувалися невизначеністю.\n\nБільшість людей вважала, що Четверо незабаром повернуться.",
+					"Саме тому протягом майже двох років значна частина адміністративної системи продовжувала існувати без реального керівництва.",
+					"Після усвідомлення того, що повернення може ніколи не відбутися, почався процес розпаду великих державних утворень.",
+					"Одночасно з цим виник Великий Похід.\n\nТисячі людей вирушили шукати сліди Чотирьох та їхню спадщину.",
+					"Багато сучасних міст були засновані саме експедиціями Великого Походу.\n\nДеякі з них існують і сьогодні.",
+					"У цей період почалося активне заселення нових територій.\n\nЗ'явилися десятки незалежних громад та торгових союзів.",
+					"Зникнення також призвело до виникнення нового історичного явища — культу пошуку.",
+					"На відміну від попередніх поколінь, люди більше не прагнули зберігати світ.\n\nВони прагнули його досліджувати.",
+					"Протягом наступних століть були знайдені сотні руїн, архівів, храмів, шахт та покинутих поселень.",
+					"Саме в цей час сформувалися археологія, сучасна картографія та більшість історичних наук.",
+					"Паралельно розвивалися релігійні рухи.\n\nУ різних регіонах Четверо почали сприйматися як боги, святі або легендарні герої.",
+					"Цікаво, що в ранніх джерелах вони майже завжди описуються як звичайні люди, тоді як пізніші тексти часто наділяють їх надприродними здібностями.",
+					"Більшість сучасних істориків погоджується, що саме Зникнення стало початком Нового Світу.\n\nПодії до нього та після нього належать до різних історичних епох."
+			)
+	);
+
+	private static final BookDefinition ALEH_JOURNAL = new BookDefinition(
+			"aleh_journal",
+			"Нотатки з Великого Походу",
+			"Алег Атрижка",
+			ModItems.ALEH_JOURNAL_BOOK,
+			1.0F,
+			VILLAGE_CHESTS,
+			List.of(
+					"6 рік після підходу. \n\nСьогодні знову дощ.\n\nМої черевики остаточно здалися.",
+					"Григорій каже, що це добра прикмета.\n\nЯ думаю, що Григорій просто давно не бачив сухих черевиків.",
+					"Ми втратили два дні через болото.\n\nХарчів вистачить ще приблизно на тиждень.",
+					"Ніхто не скаржиться.\n\nАбо просто вже немає сил скаржитися.",
+					"Учора біля вогню згадували Потужніча.\n\nГригорій розповідав, як той допоміг відбудувати їхній млин після пожежі.",
+					"Дивно.\n\nМи вирушили в похід шукати Четверьох, а більшість вечорів просто згадуємо старі історії про них.",
+					"Я досі пам'ятаю, як бачив Minecramet на ярмарку.\n\nТоді ніхто не думав, що колись це стане спогадом для онуків.",
+					"Найважче не голод і не холод.\n\nНайважче не знати, чи є сенс у тому, що ми робимо.",
+					"Іноді здається, що ми запізнилися.\n\nЩо треба було вирушати раніше.",
+					"А іноді навпаки.\n\nЩо ми перші люди, які наважилися шукати відповіді.",
+					"Сьогодні ми знайшли стару кам'яну дорогу.\n\nТаку які будував PARA_22.",
+					"І раптом усі пішли швидше.\n\nНаче сама дорога нагадала нам, чому ми тут."
+			)
+	);
+
 	private static final List<BookDefinition> BOOKS = List.of(
 			CHRONICLE_OF_DEPARTURE,
 			JUNGLE_TEMPLE_JOURNAL,
@@ -519,7 +558,9 @@ public final class ModBooks {
 			NEW_ZOMBICHI_CHRONICLE,
 			OCEAN_ECHOES,
 			SKEPTIC_OF_THE_GARDEN,
-			WEAKLAND_CAMPAIGN
+			WEAKLAND_CAMPAIGN,
+			HISTORY_OF_DISAPPEARANCE,
+			ALEH_JOURNAL
 	);
 
 	private ModBooks() {
@@ -566,17 +607,17 @@ public final class ModBooks {
 	/** The books that this mod can inject into the given loot table (empty if none). */
 	public static List<BookDefinition> matchingBooks(ResourceKey<LootTable> key) {
 		boolean generalChest = SIMPLE_DUNGEON_CHEST.equals(key) || GENERAL_BOOK_CHESTS.contains(key);
-		boolean strongholdChest = STRONGHOLD_CHESTS.contains(key);
+		boolean backupChest = isStrongholdChest(key) || isAncientCityChest(key);
 		boolean overworldGeneralChest = OVERWORLD_GENERAL_CHESTS.contains(key);
 
 		List<BookDefinition> matchingBooks = new ArrayList<>();
 		for (BookDefinition book : BOOKS) {
 			// Звичайні данжі отримують лише загальні книжки — жодної стихійної (тематичної).
 			boolean general = generalChest && canSpawnInSimpleDungeon(book);
-			// Stronghold — запасний варіант: усі книжки, окрім незерської "Кістки в Пеклі".
-			boolean stronghold = strongholdChest && !book.id().equals("bones_in_hell");
+			// Запасний варіант (stronghold і ancient city): усі книжки, окрім незерської.
+			boolean backup = backupChest && !book.id().equals("bones_in_hell");
 			if (book.lootTables().contains(key)
-					|| stronghold
+					|| backup
 					|| general
 					|| overworldGeneralChest && isOverworldGeneral(book)) {
 				matchingBooks.add(book);
@@ -586,37 +627,43 @@ public final class ModBooks {
 		return matchingBooks;
 	}
 
-	/** The configured book drop chance for a chest, or 0 if the mod injects no books there. */
-	public static float bookChanceForChest(ResourceKey<LootTable> key) {
-		return matchingBooks(key).isEmpty() ? 0.0F : bookChanceFor(key);
-	}
-
-	/** All chest loot tables that receive a book pool from this mod. */
-	public static Set<ResourceKey<LootTable>> affectedBookChests() {
-		Set<ResourceKey<LootTable>> all = new java.util.HashSet<>();
-		for (BookDefinition book : BOOKS) {
-			all.addAll(book.lootTables());
-		}
-		all.addAll(STRONGHOLD_CHESTS);
-		all.add(SIMPLE_DUNGEON_CHEST);
-		all.addAll(GENERAL_BOOK_CHESTS);
-		all.addAll(OVERWORLD_GENERAL_CHESTS);
-		return all;
-	}
-
 	/** Total number of distinct books the mod can generate across the whole world. */
 	public static int totalBookCount() {
 		return BOOKS.size();
 	}
 
 	private static float bookChanceFor(ResourceKey<LootTable> key) {
-		if (STRONGHOLD_CHESTS.contains(key)) {
-			return STRONGHOLD_BOOK_CHANCE;
+		if (isAncientCityChest(key)) {
+			return ANCIENT_CITY_BOOK_CHANCE;
 		}
-		if (RARE_BIOME_CHESTS.contains(key)) {
-			return RARE_BIOME_BOOK_CHANCE;
+		// Themed places (desert/jungle/ocean) use the themed chance; everything else
+		// (stronghold / villages / dungeons / fallback / nether) uses the default.
+		return isThemedChest(key) ? THEMED_BOOK_CHANCE : BOOK_CHEST_CHANCE;
+	}
+
+	// Detect strongholds by path so the rule works for vanilla (minecraft:chests/stronghold_*),
+	// Stellarity (stellarity:stronghold/*) and any other mod that overhauls strongholds.
+	private static boolean isStrongholdChest(ResourceKey<LootTable> key) {
+		return key.location().getPath().contains("stronghold");
+	}
+
+	// Ancient city: detected by path so vanilla and any modded variant both count.
+	private static boolean isAncientCityChest(ResourceKey<LootTable> key) {
+		return key.location().getPath().contains("ancient_city");
+	}
+
+	// A "themed place" is any chest listed in an elemental book's own lootTables
+	// (desert pyramid, jungle/ocean ruins, ancient_city, etc.). The nether book is excluded —
+	// nether chests keep the default chance.
+	private static boolean isThemedChest(ResourceKey<LootTable> key) {
+		for (BookDefinition book : BOOKS) {
+			if (!isOverworldGeneral(book)
+					&& !book.id().equals("bones_in_hell")
+					&& book.lootTables().contains(key)) {
+				return true;
+			}
 		}
-		return BOOK_CHEST_CHANCE;
+		return false;
 	}
 
 	private static LootPool.Builder createBookPool(List<BookDefinition> books, float chance) {

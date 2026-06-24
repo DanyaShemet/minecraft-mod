@@ -3,7 +3,6 @@ package com.example.command;
 import com.example.CustomDiscs;
 import com.example.book.GeneratedBookState;
 import com.example.book.ModBooks;
-import com.example.loot.ModLootTables;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,22 +30,17 @@ import java.util.TreeSet;
 
 /**
  * In-game test command for measuring how often the mod's music discs and unique books
- * drop from chests. It rolls the <b>real</b> loot tables (including the pools this mod
- * injects), so the numbers reflect actual gameplay.
+ * drop from a given chest. It rolls the <b>real</b> loot table (including the pools this
+ * mod injects globally), so the numbers reflect actual gameplay.
  *
- * <p>Because unique books mutate per-world saved state ({@link GeneratedBookState}), the
- * command snapshots that state before rolling and restores it afterwards — running the
- * test never consumes books from your actual world.
+ * <p>Unique books mutate per-world saved state ({@link GeneratedBookState}), so the command
+ * snapshots that state before rolling and restores it afterwards — running the test never
+ * consumes books from your actual world.
  *
- * <p>Usage:
- * <pre>
- *   /discstats chest &lt;loot_table_id&gt; [count]   measure one chest (default 10000 rolls)
- *   /discstats all [count]                       measure every chest the mod touches (default 1000)
- * </pre>
+ * <p>Usage: {@code /discstats chest <loot_table_id> [count]} (default 10000 rolls).
  */
 public final class DiscStatsCommand {
-	private static final int DEFAULT_CHEST_ROLLS = 10000;
-	private static final int DEFAULT_ALL_ROLLS = 1000;
+	private static final int DEFAULT_ROLLS = 10000;
 	private static final int MAX_ROLLS = 1_000_000;
 
 	private DiscStatsCommand() {
@@ -57,16 +51,10 @@ public final class DiscStatsCommand {
 				.requires(source -> source.hasPermission(2))
 				.then(Commands.literal("chest")
 						.then(Commands.argument("table", ResourceLocationArgument.id())
-								.executes(ctx -> runChest(ctx, DEFAULT_CHEST_ROLLS))
+								.executes(ctx -> runChest(ctx, DEFAULT_ROLLS))
 								.then(Commands.argument("count", IntegerArgumentType.integer(1, MAX_ROLLS))
-										.executes(ctx -> runChest(ctx, IntegerArgumentType.getInteger(ctx, "count"))))))
-				.then(Commands.literal("all")
-						.executes(ctx -> runAll(ctx, DEFAULT_ALL_ROLLS))
-						.then(Commands.argument("count", IntegerArgumentType.integer(1, MAX_ROLLS))
-								.executes(ctx -> runAll(ctx, IntegerArgumentType.getInteger(ctx, "count"))))));
+										.executes(ctx -> runChest(ctx, IntegerArgumentType.getInteger(ctx, "count")))))));
 	}
-
-	// --- /discstats chest <id> [count] ---
 
 	private static int runChest(CommandContext<CommandSourceStack> ctx, int count) {
 		CommandSourceStack source = ctx.getSource();
@@ -81,81 +69,20 @@ public final class DiscStatsCommand {
 			return 0;
 		}
 
-		boolean discChest = ModLootTables.isDiscChest(key);
-		boolean bookChest = !ModBooks.matchingBooks(key).isEmpty();
-		if (!discChest && !bookChest) {
-			source.sendSuccess(() -> Component.literal(
-					"§e⚠ Цей сундук мод не змінює — платівки та книжки сюди не додаються."), false);
-		}
-
-		Stats stats = simulate(level, table, key, source.getPosition(), count);
-		report(source, id.toString(), key, count, stats);
-		return 1;
-	}
-
-	// --- /discstats all [count] ---
-
-	private static int runAll(CommandContext<CommandSourceStack> ctx, int count) {
-		CommandSourceStack source = ctx.getSource();
-		ServerLevel level = source.getLevel();
-		Vec3 origin = source.getPosition();
-
-		Set<ResourceKey<LootTable>> union = new TreeSet<>(
-				(a, b) -> a.location().toString().compareTo(b.location().toString()));
-		union.addAll(ModLootTables.affectedDiscChests());
-		union.addAll(ModBooks.affectedBookChests());
-
-		source.sendSuccess(() -> Component.literal(
-				"§6=== /discstats all — " + union.size() + " сундуків, по " + count + " відкриттів кожен ==="), false);
-
-		GeneratedBookState state = GeneratedBookState.get(level);
-		Set<String> snapshot = state.snapshot();
-		try {
-			int skipped = 0;
-			long grandDiscs = 0;
-			Set<String> collectedAll = new TreeSet<>();
-
-			for (ResourceKey<LootTable> key : union) {
-				LootTable table = level.getServer().reloadableRegistries().getLootTable(key);
-				if (table == LootTable.EMPTY) {
-					skipped++;
-					continue;
-				}
-
-				Stats s = simulate(level, table, key, origin, count);
-				grandDiscs += s.discHits;
-				collectedAll.addAll(s.collectedBooks);
-
-				String line = String.format("§7%s §r§b%s%%§7 диск, §d%s%%§7 книжка§r",
-						trimNamespace(key.location().toString()),
-						pct(s.discHits, count), pct(s.bookGateHits, count));
-				source.sendSuccess(() -> Component.literal(line), false);
-			}
-
-			long totalDiscsF = grandDiscs;
-			int collectedF = collectedAll.size();
-			int skippedF = skipped;
-			source.sendSuccess(() -> Component.literal(String.format(
-					"§6РАЗОМ:§r платівок випало §b%d§r, унікальних книжок зібрано §d%d / %d§r%s",
-					totalDiscsF, collectedF, ModBooks.totalBookCount(),
-					skippedF > 0 ? " §8(пропущено " + skippedF + " незавантажених таблиць)" : "")), false);
-		} finally {
-			state.restore(snapshot);
-		}
-
-		source.sendSuccess(() -> Component.literal("§a✔ Стан світу не змінено (book state відновлено)."), false);
+		Stats stats = simulate(level, table, source.getPosition(), count);
+		report(source, id.toString(), count, stats);
 		return 1;
 	}
 
 	// --- core simulation (no permanent side effects) ---
 
-	private static Stats simulate(ServerLevel level, LootTable table, ResourceKey<LootTable> key, Vec3 origin, int count) {
+	private static Stats simulate(ServerLevel level, LootTable table, Vec3 origin, int count) {
 		GeneratedBookState state = GeneratedBookState.get(level);
 		Set<String> snapshot = state.snapshot();
 		Stats stats = new Stats();
 		try {
-			// Pass 1 — per-roll rates. Reset book state before every roll so the 10% book
-			// gate is measured cleanly (otherwise the unique-book pool exhausts after a few rolls).
+			// Pass 1 — per-roll rates. Reset book state before every roll so the book gate is
+			// measured cleanly (otherwise the unique-book pool exhausts after a few rolls).
 			for (int i = 0; i < count; i++) {
 				state.restore(snapshot);
 				boolean disc = false;
@@ -177,8 +104,8 @@ public final class DiscStatsCommand {
 				}
 			}
 
-			// Pass 2 — collection over `count` openings. No reset: unique books accumulate
-			// exactly as they would in a real world, so we see how many distinct books you'd get.
+			// Pass 2 — collection over `count` openings. No reset: unique books accumulate exactly
+			// as they would in a real world, so we see how many distinct books you'd actually get.
 			state.restore(snapshot);
 			for (int i = 0; i < count; i++) {
 				for (ItemStack stack : rollOnce(level, table, origin)) {
@@ -200,13 +127,11 @@ public final class DiscStatsCommand {
 		return table.getRandomItems(params);
 	}
 
-	private static void report(CommandSourceStack source, String id, ResourceKey<LootTable> key, int count, Stats stats) {
+	private static void report(CommandSourceStack source, String id, int count, Stats stats) {
 		source.sendSuccess(() -> Component.literal("§6=== Статистика лутту: §r" + id + " §6(прокруток: " + count + ") ==="), false);
 
-		float discChance = ModLootTables.discChanceForChest(key);
 		source.sendSuccess(() -> Component.literal(String.format(
-				"§bПлатівки:§r %d / %d = §b%s%%§r  (налаштовано: %s%%)",
-				stats.discHits, count, pct(stats.discHits, count), fmt(discChance * 100))), false);
+				"§bПлатівки:§r %d / %d = §b%s%%", stats.discHits, count, pct(stats.discHits, count))), false);
 		if (!stats.discByName.isEmpty()) {
 			StringBuilder sb = new StringBuilder("§7  розподіл:§r ");
 			boolean first = true;
@@ -221,16 +146,13 @@ public final class DiscStatsCommand {
 			source.sendSuccess(() -> Component.literal(discLine), false);
 		}
 
-		float bookChance = ModBooks.bookChanceForChest(key);
-		int eligible = ModBooks.matchingBooks(key).size();
 		source.sendSuccess(() -> Component.literal(String.format(
-				"§dКнижки (шанс на відкриття):§r %d / %d = §d%s%%§r  (налаштовано: %s%%)",
-				stats.bookGateHits, count, pct(stats.bookGateHits, count), fmt(bookChance * 100))), false);
+				"§dКнижки (шанс на відкриття):§r %d / %d = §d%s%%", stats.bookGateHits, count, pct(stats.bookGateHits, count))), false);
 		source.sendSuccess(() -> Component.literal(String.format(
-				"§dКнижки:§r у цьому сундуку доступно §d%d§r типів; за %d відкриттів зібрано унікальних: §d%d§r",
-				eligible, count, stats.collectedBooks.size())), false);
-		source.sendSuccess(() -> Component.literal(
-				"§8  (книжки унікальні — кожна випадає лише раз за світ)"), false);
+				"§dКнижки:§r за %d відкриттів зібрано унікальних: §d%d / %d§r", count, stats.collectedBooks.size(), ModBooks.totalBookCount())), false);
+		if (!stats.collectedBooks.isEmpty()) {
+			source.sendSuccess(() -> Component.literal("§7  " + String.join(", ", stats.collectedBooks)), false);
+		}
 
 		source.sendSuccess(() -> Component.literal("§a✔ Стан світу не змінено (book state відновлено)."), false);
 	}
@@ -252,15 +174,7 @@ public final class DiscStatsCommand {
 	}
 
 	private static String pct(long hits, int total) {
-		return fmt(100.0 * hits / total);
-	}
-
-	private static String fmt(double value) {
-		return String.format("%.2f", value);
-	}
-
-	private static String trimNamespace(String id) {
-		return id.startsWith("minecraft:") ? id.substring("minecraft:".length()) : id;
+		return String.format("%.2f", 100.0 * hits / total);
 	}
 
 	private static final class Stats {

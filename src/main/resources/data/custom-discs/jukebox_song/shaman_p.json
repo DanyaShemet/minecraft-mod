@@ -3,7 +3,7 @@
 	"description": {
 		"translate": "item.custom-discs.shaman_p_disc.jukebox"
 	},
-	"length_in_seconds": 172.0,
+	"length_in_seconds": 88.0,
 	"sound_event": "custom-discs:music_disc.shaman_p"
 }
 
