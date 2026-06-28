@@ -55,7 +55,7 @@ isInjectableChest(key, tableBuilder)
 
 ## Books (`ModBooks`)
 
-15 books total (`BOOKS`) — 5 themed + 10 general. Each book is **unique per
+18 books total (`BOOKS`) — 5 themed + 13 general. Each book is **unique per
 world**: it can drop **once ever**, tracked in `GeneratedBookState` (per-level
 SavedData). The `UniqueBookLootFunction` picks a random *not-yet-generated*
 matching book and marks it; if all matching books are already generated it
@@ -88,7 +88,7 @@ A book matches a chest if any of:
    chests get only non-themed books.
 
 If `matchingBooks(key)` is **empty** (an unlisted/modded chest), the MODIFY
-listener falls back to `generalOverworldBooks()` (the 10 non-themed books) at
+listener falls back to `generalOverworldBooks()` (the 13 non-themed books) at
 `BOOK_CHEST_CHANCE`. So **every** chest has books; themed books never leak via
 the fallback.
 
@@ -97,10 +97,16 @@ the fallback.
 `canSpawnInSimpleDungeon` and `isOverworldGeneral` both exclude the same 5 themed
 books, so themed books **never** drop in dungeons or generic modded chests:
 `bones_in_hell`, `sea_of_turtles`, `ocean_echoes`, `jungle_temple_journal`,
-`prayer_in_the_sand`.
+`prayer_in_the_sand`. Every other book is a general "lore" book that drops
+everywhere except the themed elemental chests.
 
 Backups = stronghold **and** ancient city. Both host all books except the nether
-one (`backupChest && !bones_in_hell` in `matchingBooks`).
+one (`backupChest && !bones_in_hell` in `matchingBooks`). `my_struggle`
+(«Моя боротьба», Minecramet), `on_roads_and_stone` («Про Дороги і Камінь»,
+PARA_22) and `on_gardens_and_time` («Про Сади і Час», Sleepwalking) are ordinary
+general books (declare `VILLAGE_CHESTS`, not excluded from any set), so they drop
+like the other lore books — villages, dungeons, the global fallback and the
+backups — just not in the elemental chests.
 
 | Book | id | Where it can drop |
 |---|---|---|
@@ -110,7 +116,7 @@ one (`backupChest && !bones_in_hell` in `matchingBooks`).
 | Море Черепах (ocean) | `sea_of_turtles` | ocean chests + backups |
 | Знахідка на Дні (ocean) | `ocean_echoes` | ocean chests + backups |
 
-The 10 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
+The 13 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
 illager_mansion/*), the backups (stronghold + ancient city), general dungeons,
 and as the global fallback.
 
@@ -166,7 +172,7 @@ rebuild.
 | File | Role |
 |---|---|
 | `CustomDiscs.java` | mod init; registers items, loot, books; (disabled) command |
-| `item/ModItems.java` | 11 discs + 13 book items |
+| `item/ModItems.java` | 12 discs + 18 book items |
 | `loot/ModLootTables.java` | global disc injection, `isInjectableChest`, blacklist |
 | `book/ModBooks.java` | book matching/theming, stronghold + global fallback |
 | `book/UniqueBookLootFunction.java` | picks a random unused book, marks it generated |

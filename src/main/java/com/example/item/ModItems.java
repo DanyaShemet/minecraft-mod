@@ -52,6 +52,9 @@ public final class ModItems {
 	public static final Item WEAKLAND_CAMPAIGN_BOOK = registerBook("weakland_campaign_book");
 	public static final Item HISTORY_OF_DISAPPEARANCE_BOOK = registerBook("history_of_disappearance_book");
 	public static final Item ALEH_JOURNAL_BOOK = registerBook("aleh_journal_book");
+	public static final Item MY_STRUGGLE_BOOK = registerBook("my_struggle_book");
+	public static final Item ON_ROADS_AND_STONE_BOOK = registerBook("on_roads_and_stone_book");
+	public static final Item ON_GARDENS_AND_TIME_BOOK = registerBook("on_gardens_and_time_book");
 
 	private ModItems() {
 	}
@@ -85,6 +88,9 @@ public final class ModItems {
 			entries.accept(WEAKLAND_CAMPAIGN_BOOK);
 			entries.accept(HISTORY_OF_DISAPPEARANCE_BOOK);
 			entries.accept(ALEH_JOURNAL_BOOK);
+			entries.accept(MY_STRUGGLE_BOOK);
+			entries.accept(ON_ROADS_AND_STONE_BOOK);
+			entries.accept(ON_GARDENS_AND_TIME_BOOK);
 		});
 	}
 

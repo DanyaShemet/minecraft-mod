@@ -58,7 +58,7 @@
 	"music_disc.podcast-2": {
 		"sounds": [
 			{
-				"name": "custom-discs:records/podcast-2",
+				"name": "custom-discs:records/podcast-2-1",
 				"stream": true
 			}
 		]
