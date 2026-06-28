@@ -25,7 +25,9 @@
       "Bash(unzip -l build/libs/*.jar)",
       "Bash(git --no-pager stash list)",
       "Bash(git --no-pager stash show --stat 0)",
-      "Bash(git --no-pager diff --stat HEAD)"
+      "Bash(git --no-pager diff --stat HEAD)",
+      "Bash(python -c \"import json;d=json.load\\(open\\('src/main/resources/data/custom-discs/advancement/find_first_book.json',encoding='utf-8'\\)\\);print\\('valid JSON, announce_to_chat =', d['display']['announce_to_chat']\\)\")",
+      "Bash(python -c \"import zipfile,json;z=zipfile.ZipFile\\('build/libs/custom-discs-1.0.0.jar'\\);d=json.loads\\(z.read\\('data/custom-discs/advancement/find_first_book.json'\\)\\);print\\('jar announce_to_chat =', d['display']['announce_to_chat']\\)\")"
     ]
   }
 }

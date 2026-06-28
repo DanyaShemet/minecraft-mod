@@ -18,11 +18,11 @@ import java.util.Set;
 
 public final class ModBooks {
 	// Default book chance: stronghold, villages, dungeons and the global fallback.
-	private static final float BOOK_CHEST_CHANCE = 0.05F;
+	private static final float BOOK_CHEST_CHANCE = 0.06F;
 	// Elemental/themed books in their own themed places (desert, jungle, ocean). Nether stays default.
-	private static final float THEMED_BOOK_CHANCE = 0.09F;
+	private static final float THEMED_BOOK_CHANCE = 0.10F;
 	// Ancient city: a second backup like stronghold (all books except nether), but rarer.
-	private static final float ANCIENT_CITY_BOOK_CHANCE = 0.04F;
+	private static final float ANCIENT_CITY_BOOK_CHANCE = 0.05F;
 	private static final ResourceKey<LootTable> SIMPLE_DUNGEON_CHEST = chest("simple_dungeon");
 
 	private static final Set<ResourceKey<LootTable>> VILLAGE_CHESTS = Set.of(

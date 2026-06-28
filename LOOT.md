@@ -64,7 +64,7 @@ returns `EMPTY`.
 Chances (`bookChanceFor(key)`):
 - `THEMED_BOOK_CHANCE` = **0.10** (10%) — elemental books in their own themed
   places (desert / jungle / ocean), detected by `isThemedChest(key)`.
-- `BOOK_CHEST_CHANCE` = **0.05** (5%) — the default: stronghold, villages,
+- `BOOK_CHEST_CHANCE` = **0.07** (7%) — the default: stronghold, villages,
   dungeons, the global fallback, **and the nether** (the nether book is
   explicitly excluded from `isThemedChest`, so it uses the default).
 
@@ -160,8 +160,8 @@ commented lines to use it.
 - Discs: `MUSIC_DISC_CHEST_CHANCE` = **0.07** (every chest).
 - Themed books in themed places: `THEMED_BOOK_CHANCE` = **0.10**.
 - All other books (stronghold / villages / dungeons / fallback / nether):
-  `BOOK_CHEST_CHANCE` = **0.05**.
-- Ancient city: `ANCIENT_CITY_BOOK_CHANCE` = **0.04** (a second backup like
+  `BOOK_CHEST_CHANCE` = **0.07**.
+- Ancient city: `ANCIENT_CITY_BOOK_CHANCE` = **0.06** (a second backup like
   stronghold — all books except nether — but rarer).
 
 To re-enable easy in-game testing, bump these constants up (e.g. 0.90) and
