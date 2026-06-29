@@ -55,11 +55,28 @@ isInjectableChest(key, tableBuilder)
 
 ## Books (`ModBooks`)
 
-18 books total (`BOOKS`) — 5 themed + 13 general. Each book is **unique per
-world**: it can drop **once ever**, tracked in `GeneratedBookState` (per-level
-SavedData). The `UniqueBookLootFunction` picks a random *not-yet-generated*
+16 books total (`BOOKS`) — 5 themed + 11 general. Each book is **unique per
+world**: it can drop **once ever**, tracked in `GeneratedBookState` (SavedData
+stored on the **Overworld** `DimensionDataStorage`, so the set is global per-world
+— not per-dimension; this is what makes the nether book and the first-book gate
+work across dimensions). The `UniqueBookLootFunction` picks a random *not-yet-generated*
 matching book and marks it; if all matching books are already generated it
 returns `EMPTY`.
+
+### First-book gate
+
+`chronicle_of_departure` (`ModBooks.FIRST_BOOK_ID`) is the **gateway book**: until
+it has been generated in the world, **no other book can drop anywhere**. While it
+is ungenerated, every book pool only offers `chronicle_of_departure`, and only in
+chests where it is eligible (its `matchingBooks` set — villages, backups, general
+dungeons, the global fallback; **not** the elemental themed chests, which produce
+nothing until then). It drops at the elevated `FIRST_BOOK_CHANCE` = **0.75** (75%)
+instead of the chest's normal chance, so it is found early. Once it is generated,
+all other books resume their normal drops.
+
+This is enforced inside `UniqueBookLootFunction`, which also performs the
+probability roll itself (rather than via a pool-level `randomChance` condition) so
+the effective chance can switch between 75% (gate) and the chest's normal chance.
 
 Chances (`bookChanceFor(key)`):
 - `THEMED_BOOK_CHANCE` = **0.10** (10%) — elemental books in their own themed
@@ -88,7 +105,7 @@ A book matches a chest if any of:
    chests get only non-themed books.
 
 If `matchingBooks(key)` is **empty** (an unlisted/modded chest), the MODIFY
-listener falls back to `generalOverworldBooks()` (the 13 non-themed books) at
+listener falls back to `generalOverworldBooks()` (the 11 non-themed books) at
 `BOOK_CHEST_CHANCE`. So **every** chest has books; themed books never leak via
 the fallback.
 
@@ -102,11 +119,10 @@ everywhere except the themed elemental chests.
 
 Backups = stronghold **and** ancient city. Both host all books except the nether
 one (`backupChest && !bones_in_hell` in `matchingBooks`). `my_struggle`
-(«Моя боротьба», Minecramet), `on_roads_and_stone` («Про Дороги і Камінь»,
-PARA_22) and `on_gardens_and_time` («Про Сади і Час», Sleepwalking) are ordinary
-general books (declare `VILLAGE_CHESTS`, not excluded from any set), so they drop
-like the other lore books — villages, dungeons, the global fallback and the
-backups — just not in the elemental chests.
+(«Моя боротьба», Minecramet) is an ordinary general book (declares
+`VILLAGE_CHESTS`, not excluded from any set), so it drops like the other lore
+books — villages, dungeons, the global fallback and the backups — just not in the
+elemental chests.
 
 | Book | id | Where it can drop |
 |---|---|---|
@@ -116,7 +132,7 @@ backups — just not in the elemental chests.
 | Море Черепах (ocean) | `sea_of_turtles` | ocean chests + backups |
 | Знахідка на Дні (ocean) | `ocean_echoes` | ocean chests + backups |
 
-The 13 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
+The 11 non-themed/"lore" books drop in: villages + mansions (woodland_mansion,
 illager_mansion/*), the backups (stronghold + ancient city), general dungeons,
 and as the global fallback.
 
@@ -163,6 +179,9 @@ commented lines to use it.
   `BOOK_CHEST_CHANCE` = **0.07**.
 - Ancient city: `ANCIENT_CITY_BOOK_CHANCE` = **0.06** (a second backup like
   stronghold — all books except nether — but rarer).
+- First-book gate: `FIRST_BOOK_CHANCE` = **0.75** — while `chronicle_of_departure`
+  is ungenerated, it is the only book that can drop (at 75%); all other books are
+  suppressed until it is found.
 
 To re-enable easy in-game testing, bump these constants up (e.g. 0.90) and
 rebuild.
@@ -172,9 +191,9 @@ rebuild.
 | File | Role |
 |---|---|
 | `CustomDiscs.java` | mod init; registers items, loot, books; (disabled) command |
-| `item/ModItems.java` | 12 discs + 18 book items |
+| `item/ModItems.java` | 12 discs + 16 book items |
 | `loot/ModLootTables.java` | global disc injection, `isInjectableChest`, blacklist |
 | `book/ModBooks.java` | book matching/theming, stronghold + global fallback |
-| `book/UniqueBookLootFunction.java` | picks a random unused book, marks it generated |
+| `book/UniqueBookLootFunction.java` | first-book gate + chance roll; picks a random unused book, marks it generated |
 | `book/GeneratedBookState.java` | per-world set of generated book ids (+ snapshot/restore) |
 | `command/DiscStatsCommand.java` | disabled drop-rate test command |

@@ -63,14 +63,6 @@
 			}
 		]
 	},
-	"music_disc.podcast-3": {
-		"sounds": [
-			{
-				"name": "custom-discs:records/podcast-3",
-				"stream": true
-			}
-		]
-	},
 	"music_disc.opera": {
 		"sounds": [
 			{

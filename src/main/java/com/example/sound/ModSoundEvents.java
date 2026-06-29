@@ -14,7 +14,6 @@ public final class ModSoundEvents {
 	public static final SoundEvent GOD = register("music_disc.god");
 	public static final SoundEvent PODCAST_1 = register("music_disc.podcast-1");
 	public static final SoundEvent PODCAST_2 = register("music_disc.podcast-2");
-	public static final SoundEvent PODCAST_3 = register("music_disc.podcast-3");
 	public static final SoundEvent OPERA = register("music_disc.opera");
 	public static final SoundEvent GOD2 = register("music_disc.god2");
 	public static final SoundEvent PRANKODIUS = register("music_disc.prankodius");

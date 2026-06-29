@@ -36,8 +36,6 @@ public final class ModLootTables {
 	private static final int PODCAST_1_DISC_WEIGHT = 1;
 	private static final float PODCAST_2_DISC_CHANCE = 1.0F;
 	private static final int PODCAST_2_DISC_WEIGHT = 1;
-	private static final float PODCAST_3_DISC_CHANCE = 1.0F;
-	private static final int PODCAST_3_DISC_WEIGHT = 1;
 	private static final float OPERA_DISC_CHANCE = 1.0F;
 	private static final int OPERA_DISC_WEIGHT = 1;
 	private static final float GOD2_DISC_CHANCE = 1.0F;
@@ -54,7 +52,6 @@ public final class ModLootTables {
 			new MusicDiscLoot(ModItems.GOD_DISC, GOD_DISC_CHANCE, GOD_DISC_WEIGHT),
 			new MusicDiscLoot(ModItems.PODCAST_1_DISC, PODCAST_1_DISC_CHANCE, PODCAST_1_DISC_WEIGHT),
 			new MusicDiscLoot(ModItems.PODCAST_2_DISC, PODCAST_2_DISC_CHANCE, PODCAST_2_DISC_WEIGHT),
-			new MusicDiscLoot(ModItems.PODCAST_3_DISC, PODCAST_3_DISC_CHANCE, PODCAST_3_DISC_WEIGHT),
 			new MusicDiscLoot(ModItems.OPERA_DISC, OPERA_DISC_CHANCE, OPERA_DISC_WEIGHT),
 			new MusicDiscLoot(ModItems.GOD2_DISC, GOD2_DISC_CHANCE, GOD2_DISC_WEIGHT),
 			new MusicDiscLoot(ModItems.PRANKODIUS_DISC, PRANKODIUS_DISC_CHANCE, PRANKODIUS_DISC_WEIGHT)

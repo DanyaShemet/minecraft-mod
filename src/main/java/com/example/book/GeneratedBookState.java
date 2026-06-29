@@ -24,7 +24,11 @@ public class GeneratedBookState extends SavedData {
 	private final Set<String> generatedBookIds = new HashSet<>();
 
 	public static GeneratedBookState get(ServerLevel level) {
-		return level.getDataStorage().computeIfAbsent(FACTORY, DATA_NAME);
+		// Always store on the Overworld's data storage so the "generated books" set is truly global
+		// (per-world), not per-dimension. Otherwise the first-book gate would check the Nether's own
+		// state — where chronicle_of_departure can never be generated — and nether books would never
+		// drop. Using the overworld storage also makes every book genuinely unique across the world.
+		return level.getServer().overworld().getDataStorage().computeIfAbsent(FACTORY, DATA_NAME);
 	}
 
 	public static GeneratedBookState load(CompoundTag tag, HolderLookup.Provider registries) {

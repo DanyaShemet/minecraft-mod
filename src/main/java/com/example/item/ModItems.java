@@ -20,7 +20,6 @@ public final class ModItems {
 	public static final ResourceKey<JukeboxSong> GOD_SONG_KEY = jukeboxSongKey("god");
 	public static final ResourceKey<JukeboxSong> PODCAST_1_SONG_KEY = jukeboxSongKey("podcast-1");
 	public static final ResourceKey<JukeboxSong> PODCAST_2_SONG_KEY = jukeboxSongKey("podcast-2");
-	public static final ResourceKey<JukeboxSong> PODCAST_3_SONG_KEY = jukeboxSongKey("podcast-3");
 	public static final ResourceKey<JukeboxSong> OPERA_SONG_KEY = jukeboxSongKey("opera");
 	public static final ResourceKey<JukeboxSong> GOD2_SONG_KEY = jukeboxSongKey("god2");
 	public static final ResourceKey<JukeboxSong> PRANKODIUS_SONG_KEY = jukeboxSongKey("prankodius");
@@ -33,7 +32,6 @@ public final class ModItems {
 	public static final Item GOD_DISC = registerMusicDisc("god_disc", GOD_SONG_KEY);
 	public static final Item PODCAST_1_DISC = registerMusicDisc("podcast-1_disc", PODCAST_1_SONG_KEY);
 	public static final Item PODCAST_2_DISC = registerMusicDisc("podcast-2_disc", PODCAST_2_SONG_KEY);
-	public static final Item PODCAST_3_DISC = registerMusicDisc("podcast-3_disc", PODCAST_3_SONG_KEY);
 	public static final Item OPERA_DISC = registerMusicDisc("opera_disc", OPERA_SONG_KEY);
 	public static final Item GOD2_DISC = registerMusicDisc("god2_disc", GOD2_SONG_KEY);
 	public static final Item PRANKODIUS_DISC = registerMusicDisc("prankodius_disc", PRANKODIUS_SONG_KEY);
@@ -53,8 +51,6 @@ public final class ModItems {
 	public static final Item HISTORY_OF_DISAPPEARANCE_BOOK = registerBook("history_of_disappearance_book");
 	public static final Item ALEH_JOURNAL_BOOK = registerBook("aleh_journal_book");
 	public static final Item MY_STRUGGLE_BOOK = registerBook("my_struggle_book");
-	public static final Item ON_ROADS_AND_STONE_BOOK = registerBook("on_roads_and_stone_book");
-	public static final Item ON_GARDENS_AND_TIME_BOOK = registerBook("on_gardens_and_time_book");
 
 	private ModItems() {
 	}
@@ -69,7 +65,6 @@ public final class ModItems {
 			entries.accept(GOD_DISC);
 			entries.accept(PODCAST_1_DISC);
 			entries.accept(PODCAST_2_DISC);
-			entries.accept(PODCAST_3_DISC);
 			entries.accept(OPERA_DISC);
 			entries.accept(GOD2_DISC);
 			entries.accept(PRANKODIUS_DISC);
@@ -89,8 +84,6 @@ public final class ModItems {
 			entries.accept(HISTORY_OF_DISAPPEARANCE_BOOK);
 			entries.accept(ALEH_JOURNAL_BOOK);
 			entries.accept(MY_STRUGGLE_BOOK);
-			entries.accept(ON_ROADS_AND_STONE_BOOK);
-			entries.accept(ON_GARDENS_AND_TIME_BOOK);
 		});
 	}
 

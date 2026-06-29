@@ -175,26 +175,6 @@
 					}
 				]
 			}
-		},
-		"has_on_roads_and_stone": {
-			"trigger": "minecraft:inventory_changed",
-			"conditions": {
-				"items": [
-					{
-						"items": "custom-discs:on_roads_and_stone_book"
-					}
-				]
-			}
-		},
-		"has_on_gardens_and_time": {
-			"trigger": "minecraft:inventory_changed",
-			"conditions": {
-				"items": [
-					{
-						"items": "custom-discs:on_gardens_and_time_book"
-					}
-				]
-			}
 		}
 	},
 	"requirements": [
@@ -214,9 +194,7 @@
 			"has_weakland_campaign",
 			"has_history_of_disappearance",
 			"has_aleh_journal",
-			"has_my_struggle",
-			"has_on_roads_and_stone",
-			"has_on_gardens_and_time"
+			"has_my_struggle"
 		]
 	]
 }

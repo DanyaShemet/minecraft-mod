@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.ArrayList;
@@ -17,12 +16,16 @@ import java.util.List;
 import java.util.Set;
 
 public final class ModBooks {
+	// The first book of the storyline. It must be found before any other book can drop anywhere
+	// in the world (gated in UniqueBookLootFunction), and it drops at its own elevated chance.
+	public static final String FIRST_BOOK_ID = "chronicle_of_departure";
+	public static final float FIRST_BOOK_CHANCE = 0.50F;
 	// Default book chance: stronghold, villages, dungeons and the global fallback.
 	private static final float BOOK_CHEST_CHANCE = 0.06F;
 	// Elemental/themed books in their own themed places (desert, jungle, ocean). Nether stays default.
 	private static final float THEMED_BOOK_CHANCE = 0.10F;
 	// Ancient city: a second backup like stronghold (all books except nether), but rarer.
-	private static final float ANCIENT_CITY_BOOK_CHANCE = 0.05F;
+	private static final float ANCIENT_CITY_BOOK_CHANCE = 0.08F;
 	private static final ResourceKey<LootTable> SIMPLE_DUNGEON_CHEST = chest("simple_dungeon");
 
 	private static final Set<ResourceKey<LootTable>> VILLAGE_CHESTS = Set.of(
@@ -388,18 +391,18 @@ public final class ModBooks {
 			1.0F,
 			VILLAGE_CHESTS,
 			List.of(
-					"Другий рік після Відходу.\n\nЯ пишу цей документ від імені Тимчасової Ради Потужляндії.",
-					"Майже два роки ми чекали на повернення Чотирьох.\n\nМайже два роки ми робили вигляд, що нічого не змінилося.",
-					"Та настав час дивитися правді в очі.\n\nНіхто не повернувся.",
-					"Більшість доріг занепадає.\n\nПоселення дедалі рідше отримують допомогу від столиці.",
-					"Ми більше не можемо вимагати від людей підкорятися владі, якої не існує.",
-					"Тому від сьогодні всі провінції Потужляндії оголошуються вільними.",
-					"Кожне місто, кожне село та кожна громада мають право самостійно обирати власних керівників.",
-					"Податки до центральної скарбниці скасовуються.\n\nМісцеві запаси залишаються місцевим жителям.",
-					"Армія Потужляндії розпускається.\n\nУсі воїни звільняються від присяги.",
-					"Ми не відкидаємо спадщину Потужніча.\n\nНавпаки, ми намагаємося зберегти те, що ще можливо зберегти.",
-					"Нехай майбутні покоління не кажуть, що ми дозволили державі загинути через страх перед змінами.",
-					"Віднині наші землі вільні.\n\nІ нехай історія сама розсудить, чи був цей день початком занепаду чи початком нового світу."
+					"Десятий рік після Відходу.\n\nЯ пишу цей документ від імені Тимчасової Ради Потужляндії.",
+					"Минуло п'ять років від початку Великого Походу.\n\nЗа цей час наші люди знайшли нові землі, нові моря та заснували нові поселення.",
+					"Ми чекали, що Четверо повернуться.\n\nНатомість світ став більшим.",
+					"Колись усі дороги вели до Потужляндії.\n\nТепер вони ведуть у десятки нових міст, які самі стали початком нових шляхів.",
+					"Ми більше не можемо керувати людьми, яких ніколи не зустрічали.\n\nСвіт став надто великим для однієї столиці.",
+					"Тому від сьогодні всі землі, засновані під час Великого Походу, визнаються вільними.",
+					"Кожне місто, кожне село та кожна громада мають право обирати власних керівників і встановлювати власні закони.",
+					"Податки до центральної скарбниці скасовуються.\n\nКожна громада відтепер відповідає за власний добробут.",
+					"Армія Потужляндії припиняє існування.\n\nЇї воїни повертаються додому або залишаються служити своїм новим громадам.",
+					"Ми не зрікаємося спадщини Чотирьох.\n\nНавпаки.\n\nСаме їхні дороги, карти та праця дали людям змогу знайти новий світ.",
+					"Потужляндія більше не буде державою, що керує іншими.\n\nВіднині вона стане місцем, звідки колись почався Великий Похід.",
+					"Нехай майбутні покоління пам'ятають не день, коли ми втратили єдину державу.\n\nА день, коли світ став надто великим, щоб ним керував лише один народ."
 			)
 	);
 
@@ -568,52 +571,6 @@ public final class ModBooks {
 			)
 	);
 
-	private static final BookDefinition ON_ROADS_AND_STONE = new BookDefinition(
-			"on_roads_and_stone",
-			"Про Дороги і Камінь",
-			"PARA_22",
-			ModItems.ON_ROADS_AND_STONE_BOOK,
-			1.0F,
-			VILLAGE_CHESTS,
-			List.of(
-					"Камінь не знає жалю.\n\nЯкщо його покласти неправильно — він упаде.\n\nІ байдуже, хто саме стоїть унизу.",
-					"Багато хто думає, що найважче — видовбати камінь.\n\nНі.\n\nНайважче — вирішити, куди його покласти.",
-					"Дорогу не будують для себе.\n\nЇї будують для людей, яких ти ніколи не зустрінеш.",
-					"Якщо сьогодні зекономиш на одному блоці, через багато років хтось заплатить за це власним життям.",
-					"Коли ти будуєш дорогу між двома містами, третє завжди запитає, чому не до нього.",
-					"На це питання немає правильної відповіді.\n\nЄ лише відповідальність за власний вибір.",
-					"Будівничий не може чекати, поки всі погодяться.\n\nЯкби ми чекали, дороги не з'явилися б ніколи.",
-					"Та це не означає, що люди повинні мовчати.\n\nІноді вони бачать те, чого не бачиш ти.",
-					"Я завжди слухаю тих, хто працює поруч.\n\nБо стіна падає не через слова.\n\nВона падає через погано покладений камінь.",
-					"Не кожне рішення сподобається людям.\n\nТа якщо воно збереже міст через сто років — його варто було прийняти.",
-					"Хорошу дорогу перестають помічати.\n\nПогану згадують щодня.",
-					"Якщо після мене люди все ще ходитимуть цими шляхами, значить я будував не дарма."
-			)
-	);
-
-	private static final BookDefinition ON_GARDENS_AND_TIME = new BookDefinition(
-			"on_gardens_and_time",
-			"Про Сади і Час",
-			"Sleepwalking",
-			ModItems.ON_GARDENS_AND_TIME_BOOK,
-			1.0F,
-			VILLAGE_CHESTS,
-			List.of(
-					"Люди часто питають мене, як виростити великий сад.\n\nВони ставлять неправильне питання.",
-					"Правильне питання звучить інакше:\n\nЯким буде це місце через сто років?",
-					"Місто починається не з першого будинку.\n\nВоно починається з першого дерева, яке ти вирішив не рубати.",
-					"Я завжди просила будівничих спочатку пройтися місцевістю пішки.\n\nЗрозуміти, куди тече вода, де дме вітер і де вже народилося життя.",
-					"Не можна будувати місто проти річки.\n\nРано чи пізно вона нагадає, що була тут раніше за нас.",
-					"Мені часто дорікали, що я витрачаю час на сади, ставки та дерева.\n\nТа людина не може жити серед самого лише каменю.",
-					"PARA_22 будував дороги.\n\nЯ садила дерева вздовж них.\n\nБо дорога без тіні швидко стає дорогою без мандрівників.",
-					"Потужніч говорив про людей.\n\nMinecramet — про карти.\n\nЯ ж завжди думала про місця, куди ці люди повертатимуться додому.",
-					"Не кожен клаптик землі потрібно забудувати.\n\nІноді найцінніше рішення — залишити простір порожнім.",
-					"Дерево не знає, хто його посадив.\n\nВоно пам'ятає лише того, хто дозволив йому вирости.",
-					"Можливо одного дня наші міста стануть руїнами.\n\nДороги заростуть травою, а площі вкриються квітами.",
-					"Якщо навіть тоді люди скажуть:\n\n'Тут було гарне місце для життя.'\n\nЗначить ми будували правильно."
-			)
-	);
-
 	private static final List<BookDefinition> BOOKS = List.of(
 			CHRONICLE_OF_DEPARTURE,
 			JUNGLE_TEMPLE_JOURNAL,
@@ -630,9 +587,7 @@ public final class ModBooks {
 			WEAKLAND_CAMPAIGN,
 			HISTORY_OF_DISAPPEARANCE,
 			ALEH_JOURNAL,
-			MY_STRUGGLE,
-			ON_ROADS_AND_STONE,
-			ON_GARDENS_AND_TIME
+			MY_STRUGGLE
 	);
 
 	private ModBooks() {
@@ -739,12 +694,14 @@ public final class ModBooks {
 	}
 
 	private static LootPool.Builder createBookPool(List<BookDefinition> books, float chance) {
+		// The probability roll lives inside UniqueBookLootFunction (not as a pool condition) so the
+		// effective chance can depend on world state — the first-book gate uses FIRST_BOOK_CHANCE,
+		// everything afterwards uses this chest's normal chance.
 		LootPool.Builder pool = LootPool.lootPool()
-				.setRolls(ConstantValue.exactly(1.0F))
-				.when(LootItemRandomChanceCondition.randomChance(chance));
+				.setRolls(ConstantValue.exactly(1.0F));
 
 		for (BookDefinition book : books) {
-			pool.add(LootItem.lootTableItem(book.item()).apply(() -> new UniqueBookLootFunction(books)));
+			pool.add(LootItem.lootTableItem(book.item()).apply(() -> new UniqueBookLootFunction(books, chance)));
 			break;
 		}
 
